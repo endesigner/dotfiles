@@ -1,0 +1,3 @@
+# Downloaded Vundle bundles
+.vim/bundle/*
+!.vim/bundle/vundle
