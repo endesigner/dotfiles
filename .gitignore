@@ -1,3 +1,4 @@
 # Downloaded Vundle bundles
 .vim/bundle/*
 !.vim/bundle/vundle
+.ghc/ghci_history
