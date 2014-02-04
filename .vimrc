@@ -120,13 +120,14 @@ Bundle 'gmarik/vundle'
 " Everything else
 Bundle 'benmills/vimux'
 Bundle 'tpope/vim-surround'
-Bundle 'scrooloose/nerdtree'
+"Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
 Bundle 'kien/ctrlp.vim'
 Bundle 'oscarh/vimerl'
 Bundle 'endesigner/vim-upAndDown'
 Bundle 'digitaltoad/vim-jade'
+Bundle 'tpope/vim-vinegar'
 
 " Snipmate stuff
 Bundle 'garbas/vim-snipmate'
@@ -134,7 +135,6 @@ Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
 Bundle "honza/snipmate-snippets"
 
-"Bundle 'Lokaltog/vim-powerline'
 Bundle 'pangloss/vim-javascript'
 Bundle 'tpope/vim-fugitive'
 Bundle 'ervandew/supertab'
@@ -154,6 +154,12 @@ au FileType *.{md,mdown,mkd,mkdn,markdown,mdwn} set wrap linebreak nolist textwi
 
 " Supertab
 let g:SuperTabNoCompleteAfter = ['^', ',', '\.', '\s', ':', '(', ')', '[', ']']
+
+"Erlang
+let g:erlangManPath = '/usr/share/man'
+let g:erlangCompletionGrep='zgrep'
+let g:erlangManSuffix='erl\.gz'
+
 "}}}
 
 " Good To Have: "{{{
@@ -166,12 +172,6 @@ if &t_Co > 2 || has("gui_running")
   set hlsearch
   set guioptions-=T
   set guioptions-=m
-
-  set guifont=Menlo\ For\ Powerline:h11
-  let g:Powerline_symbols = 'fancy'
-
-  "set guifont=Monospace\ 10
-  "set guifont=Liberation\ Mono\ 10
 endif
 
 " Make sure vim receives keystrokes from tmux
@@ -194,42 +194,6 @@ autocmd BufRead *
     \ endif |
 
 
-" Convert tabs to spaces.
-"autocmd BufRead *
-    "\ let b:my_settings = {'expandtab': &et, 'shiftwidth': &sw, 'tabstop': &ts, 'softtabstop': &sts} |
-    "\ exec ':DetectIndent' |
-    "\ if !exists('b:settings') |
-    "\   let b:settings = {'expandtab': &et, 'shiftwidth': &sw, 'tabstop': &ts, 'softtabstop': &sts} |
-    "\ endif |
-    "\ call Restore(b:my_settings) |
-    "\ exec ':retab'
-
-"autocmd BufWrite *
-    "\ if exists('b:settings') |
-    "\   call Restore(b:settings) |
-    "\   exec ':%retab!' |
-    "\ endif
-
-"autocmd BufWritePost *
-    "\ call Restore(b:my_settings) |
-    "\ exec ':retab'
-
-" Restore old settings including tabs.
-func! Restore(settings)
-  for [setting, oldval] in items(a:settings)
-    if setting == 'expandtab'
-        if oldval == 1
-            exec ':set expandtab'
-        else
-            exec ':set noexpandtab'
-        endif
-    else
-        exec ':set '.setting.'='.oldval
-    endif
-  endfor
-endfunc
-
-
 " autochange to the directory of current working file (useful shit!)
 if exists('+autochdir')
   set autochdir
@@ -250,52 +214,17 @@ function! MyLastWindow()
 endfunction
 "}}}
 
-" Tabs: "{{{
-
-set tabline=%!MyTabLine()
-" Configure tabs for the console version
-function! MyTabLine()
-  let s = ''
-  for i in range(tabpagenr('$'))
-    " select the highlighting
-    if i + 1 == tabpagenr()
-      let s .= '%#TabLineSel#'
-    else
-      let s .= '%#TabLine#'
-    endif
-
-    " set the tab page number (for mouse clicks)
-    let s .= '%' . (i + 1) . 'T'
-
-    " the label is made by MyTabLabel()
-    let s .= ' %{MyTabLabel(' . (i + 1) . ')} '
-  endfor
-
-  " after the last tab fill with TabLineFill and reset tab page nr
-  let s .= '%#TabLineFill#%T'
-
-  " right-align the label to close the current tab page
-  if tabpagenr('$') > 1
-    let s .= '%=%#TabLine#%999Xclose'
-  endif
-
-  return s
-endfunction
-
-function! MyTabLabel(n)
-  let buflist = tabpagebuflist(a:n)
-  let winnr = tabpagewinnr(a:n)
-  return bufname(buflist[winnr - 1])
-endfunction
-"}}}
-
 " Mappings:"{{{
 
 " Set <Leader> key to ','
 let mapleader=','
 
+" Cycle buffers with arrows.
+map <down> :bn<cr>
+map <up> :bp<cr>
+
 " Quickfix window navigation
-nmap <silent> <leader>m :call QuickfixToggle()<cr>
+    nmap <silent> <leader>m :call QuickfixToggle()<cr>
 let g:quickfix_is_open = 0
 function! QuickfixToggle()
     if g:quickfix_is_open
@@ -312,32 +241,12 @@ endfunction
 nmap <silent> <leader>. :cn<cr>
 nmap <silent> <leader>, :cp<cr>
 
-" Map UP/DOWN for buffer switching with some exceptions.
-au BufEnter * call IdentifyBuffer()
-function! IdentifyBuffer()
-    " Let's switch buffers with arrow keys by default
-    map <down> :bn<cr>
-    map <up> :bp<cr>
-
-    " make exceptions for some buffers
-    let bufferz = ['NERD_tree', 'NetrwTreeListing']
-
-    for bufn in bufferz
-      if strridx(bufname("%"), bufn) != -1
-        "echo 'this is buffer: ' . bufn
-        map <down> j
-        map <up> k
-      endif
-    endfor
-endfunction
-
 " Make it easy to update vimrc
 nmap <Leader>s :source ~/.vimrc<cr>
 nmap <Leader>v :tabnew ~/.vimrc<cr>
 
 " Run make and show quickfix window
 nmap <Leader>l :call Make()<cr>
-
 
 " Cut
 vnoremap <C-X> "+x
@@ -378,8 +287,6 @@ nnoremap <silent> <C-e> :call SetScrolloff()<esc>3gj
 nnoremap <silent> <C-y> :call SetScrolloff()<esc>3gk
 vnoremap <silent> <C-e> :call SetScrolloff()<esc>gv3gj
 vnoremap <silent> <C-y> :call SetScrolloff()<esc>gv3gk
-"nnoremap <C-e> 3<C-e>
-"nnoremap <C-y> 3<C-y>
 
 " Always keep cursor in the center
 nnoremap <silent> j :call SetScrolloff()<esc>gj
@@ -412,11 +319,6 @@ nnoremap <silent> <leader>- ma<esc>j"_dd<esc>`a
 
 " Duplicate  current line
 nnoremap <silent> <Leader>d ma<esc>yyp<cr>`a
-
-nnoremap <silent> <LEFT> :NERDTreeToggle<CR>
-" Taglist preferences
-"let Tlist_Use_Right_Window = 1
-nnoremap <silent> <RIGHT> :TagbarToggle<CR>
 
 " Tab navigation like firefox
 nmap <silent> <C-S-tab> :tabprevious<cr>
@@ -485,10 +387,6 @@ endfunction
 "nnoremap <silent> <c-k> :call MoveWithTmux('k', '-U')<cr><cr>2k<cr>
 "nnoremap <silent> <c-h> :call MoveWithTmux('h', '-L')<cr><cr>2k<cr>
 "nnoremap <silent> <c-l> :call MoveWithTmux('l', '-R')<cr><cr>2k<cr>
-
-let g:erlangManPath = '/usr/share/man'
-let g:erlangCompletionGrep='zgrep'
-let g:erlangManSuffix='erl\.gz'
 
 " Open tmux in a split.
 map <Leader>ro :call OpenShellSplit()<cr>
@@ -563,7 +461,7 @@ function! SaveBuffer()
 endfunction
 
 function! StartErlShell()
-    call VimuxRunCommand("erl") " erlang shell
+    call VimuxRunCommand("erl")
 endfunction
 
 function! TmuxCompileErlang()
@@ -608,6 +506,7 @@ endfunction
 func! TrimSpaces()
     %s/\s\+$//
 endfunc
+
 func! QuickFix()
   " show errors if there are any
   if (len(getqflist()) != 0)
