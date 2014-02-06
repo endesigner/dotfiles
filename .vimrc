@@ -105,7 +105,7 @@ set rtp+=~/.vim/bundle/vundle/
 set rtp+=~/.vim/bundle/igor/
 set rtp+=~/.vim/bclose/ " <leader>bd without changing split layout.
 "set rtp+=~/.vim/bundle/powerline/bindings/vim
-set rtp+=~/.local/lib/python2.7/site-packages/powerline/bindings/vim/
+"set rtp+=~/.local/lib/python2.7/site-packages/powerline/bindings/vim/
 " set rtp+=~/.vim/bundle/upAndDown/
 
 call vundle#rc()
