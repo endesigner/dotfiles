@@ -1,10 +1,4 @@
-"
-"
-"
 " au BufWritePost *.erl call VimuxRunCommand("c(test).") || call VimuxRunCommand("test:rpn_test().")
-"
-"
-"
 "
 " General Settings: "{{{
 
@@ -41,9 +35,21 @@ set bg=dark
 " set tw=72
 set fo=cqt
 set wm=0
-set is
+set is " incsearch
 " disable folding
 set nofoldenable
+
+" Enable mouse
+set mouse=a
+
+" Treat words wich following characters as whole words
+set isk+=_,$,@,%,#,-
+
+" This setting ensures that each window contains a statusline that displays the current cursor position.
+set ruler
+set cmdheight=1
+set laststatus=2
+set statusline=%F%h%m%w%r\ %Y\ (%{&ff})%=\ %c%V,\ %l/%L\ (%P)
 
 " line numbers
 set nu
@@ -300,21 +306,38 @@ set backspace=indent,eol,start whichwrap+=<,>,[,]
 vnoremap <BS> d
 
 " Scroll a bit faster
-nnoremap <silent> <C-e> :call SetScrolloff()<esc>3gj
-nnoremap <silent> <C-y> :call SetScrolloff()<esc>3gk
-vnoremap <silent> <C-e> :call SetScrolloff()<esc>gv3gj
-vnoremap <silent> <C-y> :call SetScrolloff()<esc>gv3gk
+nnoremap <silent> <C-n> :call SetScrolloff()<esc>3gj
+nnoremap <silent> <C-e> :call SetScrolloff()<esc>3gk
+vnoremap <silent> <C-n> :call SetScrolloff()<esc>gv3gj
+vnoremap <silent> <C-e> :call SetScrolloff()<esc>gv3gk
 
 " Always keep cursor in the center
-nnoremap <silent> j :call SetScrolloff()<esc>gj
-nnoremap <silent> k :call SetScrolloff()<esc>gk
-vnoremap <silent> j :call SetScrolloff()<esc>gvgj
-vnoremap <silent> k :call SetScrolloff()<esc>gvgk
+"nnoremap <silent> j :call SetScrolloff()<esc>gj
+"nnoremap <silent> k :call SetScrolloff()<esc>gk
+"vnoremap <silent> j :call SetScrolloff()<esc>gvgj
+"vnoremap <silent> k :call SetScrolloff()<esc>gvgk
+
+" Colemak bindings {{{
+nnoremap <silent> n :call SetScrolloff()<esc>gj
+nnoremap <silent> e :call SetScrolloff()<esc>gk
+vnoremap <silent> n :call SetScrolloff()<esc>gvgj
+vnoremap <silent> e :call SetScrolloff()<esc>gvgk
+
+noremap n j|noremap <C-w>n <C-w>j|noremap <C-w><C-n> <C-w>j
+noremap e k|noremap <C-w>e <C-w>k|noremap <C-w><C-e> <C-w>k
+noremap s h
+noremap t l
+
+imap <silent> <C-h> <C-o>h
+imap <silent> <C-j> <C-o>n
+imap <silent> <C-k> <C-o>e
+imap <silent> <C-l> <C-o>i
+"}}}
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
-nnoremap N Nzz
-nnoremap n nzz
+nnoremap K Nzz
+nnoremap k nzz
 nnoremap * *zz
 nnoremap # #zz
 nnoremap g* g*zz
@@ -353,11 +376,10 @@ nmap <silent> <C-t> :tabnew<cr>
 imap <silent> <C-t> <ESC>:tabnew<cr>
 
 " Move with hjkl in insert mode
-imap <silent> <C-h> <C-o>h
-imap <silent> <C-j> <C-o>j
-imap <silent> <C-k> <C-o>k
-imap <silent> <C-l> <C-o>l
-
+"imap <silent> <C-h> <C-o>h
+"imap <silent> <C-j> <C-o>j
+"imap <silent> <C-k> <C-o>k
+"imap <silent> <C-l> <C-o>l
 " Clears highlighting of a search
 map <silent> <leader>/ :let @/ = ""<cr>
 
