@@ -1,10 +1,4 @@
-"
-"
-"
 " au BufWritePost *.erl call VimuxRunCommand("c(test).") || call VimuxRunCommand("test:rpn_test().")
-"
-"
-"
 "
 " General Settings: "{{{
 
@@ -37,14 +31,33 @@ set nosi si
 " prevent windows from resizing
 set noea
 set bg=dark
+<<<<<<< HEAD
+=======
+" Wrap lines
+" set tw=72
+>>>>>>> be5bee38beb2659162d6c80b1fe10e4fb2b55d83
 set fo=cqt
 set wm=0
-set is
+set is " incsearch
 " disable folding
 set nofoldenable
 
+<<<<<<< HEAD
 " Display color column to guide manual text weapping.
 set colorcolumn=80
+=======
+" Enable mouse
+set mouse=a
+
+" Treat words wich following characters as whole words
+set isk+=_,$,@,%,#,-
+
+" This setting ensures that each window contains a statusline that displays the current cursor position.
+set ruler
+set cmdheight=1
+set laststatus=2
+set statusline=%F%h%m%w%r\ %Y\ (%{&ff})%=\ %c%V,\ %l/%L\ (%P)
+>>>>>>> be5bee38beb2659162d6c80b1fe10e4fb2b55d83
 
 " line numbers
 set nu
@@ -101,12 +114,11 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 
 set nocompatible
 filetype off
-" Load stuff that Vundle does not
 set rtp+=~/.vim/bundle/vundle/
 set rtp+=~/.vim/bundle/igor/
 set rtp+=~/.vim/bclose/ " <leader>bd without changing split layout.
-"set rtp+=~/.vim/bundle/powerline/bindings/vim
-set rtp+=~/.local/lib/python2.7/site-packages/powerline/bindings/vim/
+"set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
+"set rtp+=~/.local/lib/python2.7/site-packages/powerline/bindings/vim/
 " set rtp+=~/.vim/bundle/upAndDown/
 
 call vundle#rc()
@@ -121,7 +133,6 @@ Bundle 'gmarik/vundle'
 " Everything else
 Bundle 'benmills/vimux'
 Bundle 'tpope/vim-surround'
-"Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
 Bundle 'kien/ctrlp.vim'
@@ -146,6 +157,9 @@ Bundle 'christoomey/vim-tmux-navigator'
 "}}}
 
 " Plugin Specifics: "{{{
+" TagBar
+let g:tagbar_compact = 1
+
 " CtrlP keeps directory after CtrlPDir
 let g:ctrlp_working_path_mode = 2
 
@@ -173,6 +187,12 @@ if &t_Co > 2 || has("gui_running")
   set hlsearch
   set guioptions-=T
   set guioptions-=m
+
+  "set guifont=Monospace:h11
+  let g:Powerline_symbols = 'fancy'
+
+  "set guifont=Monospace\ 10
+  "set guifont=Liberation\ Mono\ 10
 endif
 
 " Make sure vim receives keystrokes from tmux
@@ -196,11 +216,11 @@ autocmd BufRead *
 
 
 " autochange to the directory of current working file (useful shit!)
-if exists('+autochdir')
-  set autochdir
-else
-  autocmd BufEnter * silent! lcd %:p:h:gs/ /\\ /
-endif
+"if exists('+autochdir')
+  "set autochdir
+"else
+  "autocmd BufEnter * silent! lcd %:p:h:gs/ /\\ /
+"endif
 
 " quit if quickfix is last window
 au BufEnter * call MyLastWindow()
@@ -225,7 +245,7 @@ map <down> :bn<cr>
 map <up> :bp<cr>
 
 " Quickfix window navigation
-    nmap <silent> <leader>m :call QuickfixToggle()<cr>
+nmap <silent> <leader>m :call QuickfixToggle()<cr>
 let g:quickfix_is_open = 0
 function! QuickfixToggle()
     if g:quickfix_is_open
@@ -259,6 +279,16 @@ vnoremap <C-C> "+y
 map <C-V> "+gP
 cmap <C-V> <C-R>+
 
+" Copy from X11 clipboard
+vmap <F7> "+ygv"zy`>
+" Paste from X11 clipboard (Shift-F7 to paste after normal cursor, Ctrl-F7 to paste over visual selection)
+nmap <F7> "zgP
+nmap <S-F7> "zgp
+imap <F7> <C-r><C-o>z
+vmap <C-F7> "zp`]
+cmap <F7> <C-r><C-o>z
+autocmd FocusGained * let @z=@+
+
 " Pasting blockwise and linewise selections is not possible in Insert and
 " Visual mode without the +virtualedit feature.  They are pasted as if they
 " were characterwise instead.
@@ -284,21 +314,31 @@ set backspace=indent,eol,start whichwrap+=<,>,[,]
 vnoremap <BS> d
 
 " Scroll a bit faster
-nnoremap <silent> <C-e> :call SetScrolloff()<esc>3gj
-nnoremap <silent> <C-y> :call SetScrolloff()<esc>3gk
-vnoremap <silent> <C-e> :call SetScrolloff()<esc>gv3gj
-vnoremap <silent> <C-y> :call SetScrolloff()<esc>gv3gk
+nnoremap <silent> <C-n> :call SetScrolloff()<esc>3gj
+nnoremap <silent> <C-e> :call SetScrolloff()<esc>3gk
+vnoremap <silent> <C-n> :call SetScrolloff()<esc>gv3gj
+vnoremap <silent> <C-e> :call SetScrolloff()<esc>gv3gk
 
 " Always keep cursor in the center
-nnoremap <silent> j :call SetScrolloff()<esc>gj
-nnoremap <silent> k :call SetScrolloff()<esc>gk
-vnoremap <silent> j :call SetScrolloff()<esc>gvgj
-vnoremap <silent> k :call SetScrolloff()<esc>gvgk
+"nnoremap <silent> j :call SetScrolloff()<esc>gj
+"nnoremap <silent> k :call SetScrolloff()<esc>gk
+"vnoremap <silent> j :call SetScrolloff()<esc>gvgj
+"vnoremap <silent> k :call SetScrolloff()<esc>gvgk
+
+nnoremap <silent> n :call SetScrolloff()<esc>gj
+nnoremap <silent> e :call SetScrolloff()<esc>gk
+vnoremap <silent> n :call SetScrolloff()<esc>gvgj
+vnoremap <silent> e :call SetScrolloff()<esc>gvgk
+
+noremap n j|noremap <C-w>n <C-w>j|noremap <C-w><C-n> <C-w>j
+noremap e k|noremap <C-w>e <C-w>k|noremap <C-w><C-e> <C-w>k
+noremap s h
+noremap t l
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
-nnoremap N Nzz
-nnoremap n nzz
+nnoremap K Nzz
+nnoremap k nzz
 nnoremap * *zz
 nnoremap # #zz
 nnoremap g* g*zz
@@ -321,6 +361,8 @@ nnoremap <silent> <leader>- ma<esc>j"_dd<esc>`a
 " Duplicate  current line
 nnoremap <silent> <Leader>d ma<esc>yyp<cr>`a
 
+nnoremap <silent> <RIGHT> :TagbarToggle<CR>
+
 " Tab navigation like firefox
 nmap <silent> <C-S-tab> :tabprevious<cr>
 nmap <silent> <C-tab> :tabnext<cr>
@@ -336,10 +378,13 @@ imap <silent> <C-t> <ESC>:tabnew<cr>
 
 " Move with hjkl in insert mode
 imap <silent> <C-h> <C-o>h
-imap <silent> <C-j> <C-o>j
-imap <silent> <C-k> <C-o>k
-imap <silent> <C-l> <C-o>l
-
+imap <silent> <C-j> <C-o>n
+imap <silent> <C-k> <C-o>e
+imap <silent> <C-l> <C-o>i
+"imap <silent> <C-h> <C-o>h
+"imap <silent> <C-j> <C-o>j
+"imap <silent> <C-k> <C-o>k
+"imap <silent> <C-l> <C-o>l
 " Clears highlighting of a search
 map <silent> <leader>/ :let @/ = ""<cr>
 
@@ -462,7 +507,7 @@ function! SaveBuffer()
 endfunction
 
 function! StartErlShell()
-    call VimuxRunCommand("erl")
+    call VimuxRunCommand("erl") " erlang shell
 endfunction
 
 function! TmuxCompileErlang()
