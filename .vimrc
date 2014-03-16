@@ -37,13 +37,14 @@ set nosi si
 " prevent windows from resizing
 set noea
 set bg=dark
-" Wrap lines
-set tw=72
 set fo=cqt
 set wm=0
 set is
 " disable folding
 set nofoldenable
+
+" Display color column to guide manual text weapping.
+set colorcolumn=80
 
 " line numbers
 set nu
