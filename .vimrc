@@ -232,6 +232,10 @@ endfunction
 " Set <Leader> key to ','
 let mapleader=','
 
+" Reload haskell
+nnoremap <leader>rr :call VimuxRunCommand(":l " . bufname("%"))<cr>
+au BufWritePost *.hs call VimuxRunCommand(":l " . $HOME."/".bufname("%"))
+
 " Cycle buffers with arrows.
 map <down> :bn<cr>
 map <up> :bp<cr>
