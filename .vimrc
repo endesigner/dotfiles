@@ -331,6 +331,8 @@ noremap n j|noremap <C-w>n <C-w>j|noremap <C-w><C-n> <C-w>j
 noremap e k|noremap <C-w>e <C-w>k|noremap <C-w><C-e> <C-w>k
 noremap s h
 noremap t l
+noremap f e
+noremap r s
 
 imap <silent> <C-h> <C-o>h
 imap <silent> <C-j> <C-o>n
@@ -380,6 +382,10 @@ nmap <silent> <C-t> :tabnew<cr>
 imap <silent> <C-t> <ESC>:tabnew<cr>
 
 " Move with hjkl in insert mode
+imap <silent> <C-h> <C-o>h
+imap <silent> <C-j> <C-o>n
+imap <silent> <C-k> <C-o>e
+imap <silent> <C-l> <C-o>i
 "imap <silent> <C-h> <C-o>h
 "imap <silent> <C-j> <C-o>j
 "imap <silent> <C-k> <C-o>k
