@@ -326,6 +326,9 @@ noremap n j|noremap <C-w>n <C-w>j|noremap <C-w><C-n> <C-w>j
 noremap e k|noremap <C-w>e <C-w>k|noremap <C-w><C-e> <C-w>k
 noremap s h
 noremap t l
+noremap f e
+noremap r s
+
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
