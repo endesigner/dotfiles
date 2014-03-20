@@ -317,6 +317,7 @@ vnoremap <silent> <C-e> :call SetScrolloff()<esc>gv3gk
 "vnoremap <silent> j :call SetScrolloff()<esc>gvgj
 "vnoremap <silent> k :call SetScrolloff()<esc>gvgk
 
+" Colemak bindings {{{
 nnoremap <silent> n :call SetScrolloff()<esc>gj
 nnoremap <silent> e :call SetScrolloff()<esc>gk
 vnoremap <silent> n :call SetScrolloff()<esc>gvgj
@@ -329,6 +330,11 @@ noremap t l
 noremap f e
 noremap r s
 
+imap <silent> <C-h> <C-o>h
+imap <silent> <C-j> <C-o>n
+imap <silent> <C-k> <C-o>e
+imap <silent> <C-l> <C-o>i
+"}}}
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
