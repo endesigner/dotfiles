@@ -146,6 +146,7 @@ Bundle 'mileszs/ack.vim'
 Bundle 'godlygeek/tabular'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'christoomey/vim-tmux-navigator'
+
 "}}}
 
 " Plugin Specifics: "{{{
@@ -234,7 +235,7 @@ let mapleader=','
 
 " Reload haskell
 nnoremap <leader>rr :call VimuxRunCommand(":l " . bufname("%"))<cr>
-au BufWritePost *.hs call VimuxRunCommand(":l " . $HOME."/".bufname("%"))
+au! BufWritePost *.hs call VimuxRunCommand(":l " . bufname("%"))
 
 " Cycle buffers with arrows.
 map <down> :bn<cr>
