@@ -146,6 +146,7 @@ Bundle 'mileszs/ack.vim'
 Bundle 'godlygeek/tabular'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'christoomey/vim-tmux-navigator'
+Bundle 'chrisbra/csv.vim'
 
 "}}}
 
@@ -328,8 +329,6 @@ nnoremap <silent> e :call SetScrolloff()<esc>gk
 vnoremap <silent> n :call SetScrolloff()<esc>gvgj
 vnoremap <silent> e :call SetScrolloff()<esc>gvgk
 
-noremap n j|noremap <C-w>n <C-w>j|noremap <C-w><C-n> <C-w>j
-noremap e k|noremap <C-w>e <C-w>k|noremap <C-w><C-e> <C-w>k
 noremap s h
 noremap t l
 noremap f e
