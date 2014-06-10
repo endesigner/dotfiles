@@ -123,6 +123,8 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " Everything else
+Bundle 'Shougo/unite.vim'
+Bundle 'Shougo/vimproc.vim'
 Bundle 'benmills/vimux'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdcommenter'
@@ -137,7 +139,7 @@ Bundle 'tpope/vim-vinegar'
 Bundle 'garbas/vim-snipmate'
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
-Bundle "honza/snipmate-snippets"
+"Bundle "honza/snipmate-snippets"
 
 Bundle 'pangloss/vim-javascript'
 Bundle 'tpope/vim-fugitive'
@@ -151,6 +153,14 @@ Bundle 'chrisbra/csv.vim'
 "}}}
 
 " Plugin Specifics: "{{{
+
+if executable('ag')
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts = '--nogroup --nocolor'
+    let g:unite_source_grep_recursive_opt = ''
+    let g:unite_source_grep_encoding = 'utf-8'
+endif
+
 " TagBar
 let g:tagbar_compact = 1
 
@@ -233,6 +243,9 @@ endfunction
 
 " Set <Leader> key to ','
 let mapleader=','
+
+" Unite grep
+nnoremap <silent> <leader>g :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
 
 " Reload haskell
 nnoremap <leader>rr :call VimuxRunCommand(":l " . bufname("%"))<cr>
