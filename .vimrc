@@ -51,6 +51,9 @@ set cmdheight=1
 set laststatus=2
 set statusline=%F%h%m%w%r\ %Y\ (%{&ff})%=\ %c%V,\ %l/%L\ (%P)
 
+" Disable automatic comment insertioen
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+
 " line numbers
 set nu
 " Always show status line
@@ -103,7 +106,6 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 "
 " see :h vundle for more details or wiki for FAQ
 " NOTE: comments after Bundle command are not allowed..
-
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/vundle/
@@ -137,7 +139,7 @@ Bundle 'tpope/vim-vinegar'
 Bundle 'garbas/vim-snipmate'
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
-Bundle "honza/snipmate-snippets"
+"Bundle "honza/snipmate-snippets"
 
 Bundle 'pangloss/vim-javascript'
 Bundle 'tpope/vim-fugitive'
@@ -146,10 +148,24 @@ Bundle 'mileszs/ack.vim'
 Bundle 'godlygeek/tabular'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'christoomey/vim-tmux-navigator'
+Bundle 'vim-scripts/Vim-R-plugin'
+Bundle 'majutsushi/tagbar'
+Bundle 'bling/vim-airline'
 
 "}}}
 
 " Plugin Specifics: "{{{
+" Tmux colemak nav
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <c-s> :TmuxNavigateLeft<cr>
+nnoremap <silent> <c-n> :TmuxNavigateDown<cr>
+nnoremap <silent> <c-e> :TmuxNavigateUp<cr>
+nnoremap <silent> <c-t> :TmuxNavigateRight<cr>
+"nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
+
+let g:airline_powerline_fonts = 1
+
 " TagBar
 let g:tagbar_compact = 1
 
@@ -277,13 +293,24 @@ map <C-V> "+gP
 cmap <C-V> <C-R>+
 
 " Copy from X11 clipboard
-vmap <F7> "+ygv"zy`>
-" Paste from X11 clipboard (Shift-F7 to paste after normal cursor, Ctrl-F7 to paste over visual selection)
-nmap <F7> "zgP
-nmap <S-F7> "zgp
-imap <F7> <C-r><C-o>z
-vmap <C-F7> "zp`]
-cmap <F7> <C-r><C-o>z
+nnoremap <leader>y "+y
+vnoremap <leader>y "+y
+
+nnoremap <leader>Y "+Y
+vnoremap <leader>Y "+Y
+
+nnoremap <leader>p "+p
+vnoremap <leader>p "+p
+
+nnoremap <leader>P "+P
+vnoremap <leader>P "+P
+"vmap <F7> "+ygv"zy`>
+"" Paste from X11 clipboard (Shift-F7 to paste after normal cursor, Ctrl-F7 to paste over visual selection)
+"nmap <F7> "zgP
+"nmap <S-F7> "zgp
+"imap <F7> <C-r><C-o>z
+"vmap <C-F7> "zp`]
+"cmap <F7> <C-r><C-o>z
 autocmd FocusGained * let @z=@+
 
 " Pasting blockwise and linewise selections is not possible in Insert and
@@ -333,7 +360,6 @@ noremap e k|noremap <C-w>e <C-w>k|noremap <C-w><C-e> <C-w>k
 noremap s h
 noremap t l
 noremap f e
-noremap r s
 
 imap <silent> <C-h> <C-o>h
 imap <silent> <C-j> <C-o>n
@@ -576,3 +602,16 @@ func! Make()
 endfunc
 
 let g:VimuxResetSequence = ''
+
+" Lines added by the Vim-R-plugin command :RpluginConfig (2014-Mar-29 14:47):
+" Change the <LocalLeader> key:
+let maplocalleader = ","
+" Use Ctrl+Space to do omnicompletion:
+if has("gui_running")
+    inoremap <C-Space> <C-x><C-o>
+else
+    inoremap <Nul> <C-x><C-o>
+endif
+" Press the space bar to send lines (in Normal mode) and selections to R:
+vmap <Space> <Plug>RDSendSelection
+nmap <Space> <Plug>RDSendLine
