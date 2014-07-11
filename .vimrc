@@ -125,6 +125,8 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " Everything else
+Bundle 'Shougo/unite.vim'
+Bundle 'Shougo/vimproc.vim'
 Bundle 'benmills/vimux'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdcommenter'
@@ -165,6 +167,13 @@ nnoremap <silent> <c-t> :TmuxNavigateRight<cr>
 "nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
 
 let g:airline_powerline_fonts = 1
+
+if executable('ag')
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts = '--nogroup --nocolor'
+    let g:unite_source_grep_recursive_opt = ''
+    let g:unite_source_grep_encoding = 'utf-8'
+endif
 
 " TagBar
 let g:tagbar_compact = 1
@@ -248,6 +257,9 @@ endfunction
 
 " Set <Leader> key to ','
 let mapleader=','
+
+" Unite grep
+nnoremap <silent> <leader>g :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
 
 " Reload haskell
 nnoremap <leader>rr :call VimuxRunCommand(":l " . bufname("%"))<cr>
@@ -355,8 +367,6 @@ nnoremap <silent> e :call SetScrolloff()<esc>gk
 vnoremap <silent> n :call SetScrolloff()<esc>gvgj
 vnoremap <silent> e :call SetScrolloff()<esc>gvgk
 
-noremap n j|noremap <C-w>n <C-w>j|noremap <C-w><C-n> <C-w>j
-noremap e k|noremap <C-w>e <C-w>k|noremap <C-w><C-e> <C-w>k
 noremap s h
 noremap t l
 noremap f e
