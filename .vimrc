@@ -157,7 +157,6 @@ Bundle 'plasticboy/vim-markdown'
 Bundle 'christoomey/vim-tmux-navigator'
 Bundle 'vim-scripts/Vim-R-plugin'
 Bundle 'majutsushi/tagbar'
-Bundle 'bling/vim-airline'
 
 "}}}
 
@@ -170,8 +169,6 @@ nnoremap <silent> <c-n> :TmuxNavigateDown<cr>
 nnoremap <silent> <c-e> :TmuxNavigateUp<cr>
 nnoremap <silent> <c-t> :TmuxNavigateRight<cr>
 "nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
-
-let g:airline_powerline_fonts = 1
 
 if executable('ag')
     let g:unite_source_grep_command = 'ag'
