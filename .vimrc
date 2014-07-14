@@ -2,6 +2,9 @@
 "
 " General Settings: "{{{
 
+set wildmode=longest,list,full
+set wildmenu
+
 " switch between buffers without saving
 set hidden
 " ignore case for searching
@@ -21,10 +24,10 @@ set listchars=tab:>.,trail:.,extends:>,precedes:<,
 set list
 set encoding=utf8
 set fileencoding=utf8
-set ts=4
-set sw=4
+set ts=2
+set sw=2
 set nosta sta
-set sts=4
+set sts=2
 set noet et
 set ai noai
 set nosi si
@@ -125,6 +128,8 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " Everything else
+Bundle 'bling/vim-airline'
+Bundle 'Lokaltog/vim-easymotion'
 Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/vimproc.vim'
 Bundle 'benmills/vimux'
@@ -174,6 +179,9 @@ if executable('ag')
     let g:unite_source_grep_recursive_opt = ''
     let g:unite_source_grep_encoding = 'utf-8'
 endif
+
+" Airline
+let g:airline_powerline_fonts = 1
 
 " TagBar
 let g:tagbar_compact = 1
@@ -284,9 +292,6 @@ function! QuickfixToggle()
     endif
 endfunction
 
-nmap <silent> <leader>. :cn<cr>
-nmap <silent> <leader>, :cp<cr>
-
 " Make it easy to update vimrc
 nmap <Leader>s :source ~/.vimrc<cr>
 nmap <Leader>v :tabnew ~/.vimrc<cr>
@@ -350,10 +355,10 @@ set backspace=indent,eol,start whichwrap+=<,>,[,]
 vnoremap <BS> d
 
 " Scroll a bit faster
-nnoremap <silent> <C-n> :call SetScrolloff()<esc>3gj
-nnoremap <silent> <C-e> :call SetScrolloff()<esc>3gk
-vnoremap <silent> <C-n> :call SetScrolloff()<esc>gv3gj
-vnoremap <silent> <C-e> :call SetScrolloff()<esc>gv3gk
+nnoremap <silent> <s-n> :call SetScrolloff()<esc>3gj
+nnoremap <silent> <s-e> :call SetScrolloff()<esc>3gk
+vnoremap <silent> <s-n> :call SetScrolloff()<esc>gv3gj
+vnoremap <silent> <s-e> :call SetScrolloff()<esc>gv3gk
 
 " Always keep cursor in the center
 "nnoremap <silent> j :call SetScrolloff()<esc>gj
@@ -370,11 +375,12 @@ vnoremap <silent> e :call SetScrolloff()<esc>gvgk
 noremap s h
 noremap t l
 noremap f e
+"noremap r s
 
-imap <silent> <C-h> <C-o>h
-imap <silent> <C-j> <C-o>n
-imap <silent> <C-k> <C-o>e
-imap <silent> <C-l> <C-o>i
+"imap <silent> <C-h> <C-o>h
+"imap <silent> <C-n> <C-o>j
+"imap <silent> <C-e> <C-o>k
+"imap <silent> <C-i> <C-o>l
 "}}}
 
 " Search mappings: These will make it so that going to the next one in a
@@ -418,27 +424,18 @@ imap <silent> <C-tab> <ESC>:tabnext<cr>i
 nmap <silent> <C-t> :tabnew<cr>
 imap <silent> <C-t> <ESC>:tabnew<cr>
 
-" Move with hjkl in insert mode
-imap <silent> <C-h> <C-o>h
-imap <silent> <C-j> <C-o>n
-imap <silent> <C-k> <C-o>e
-imap <silent> <C-l> <C-o>i
-"imap <silent> <C-h> <C-o>h
-"imap <silent> <C-j> <C-o>j
-"imap <silent> <C-k> <C-o>k
-"imap <silent> <C-l> <C-o>l
 " Clears highlighting of a search
 map <silent> <leader>/ :let @/ = ""<cr>
 
 " Move between splits
-nnoremap <silent> <C-A-k> <C-W>W
-nnoremap <silent> <C-A-h> <C-W>h
-nnoremap <silent> <C-A-j> <C-W>w
-nnoremap <silent> <C-A-l> <C-W>l
+"nnoremap <silent> <C-A-k> <C-W>W
+"nnoremap <silent> <C-A-h> <C-W>h
+"nnoremap <silent> <C-A-j> <C-W>w
+"nnoremap <silent> <C-A-l> <C-W>l
 
-nnoremap <silent> <C-A-Up> <C-W>k<C-W>_
-nnoremap <silent> <C-A-Down> <C-W>j<C-W>_
-nnoremap <silent> <C-A-Enter> <C-W>_
+"nnoremap <silent> <C-A-Up> <C-W>k<C-W>_
+"nnoremap <silent> <C-A-Down> <C-W>j<C-W>_
+"nnoremap <silent> <C-A-Enter> <C-W>_
 
 " Remove current buffer
 nnoremap <silent> <Leader>br :bd<cr>
@@ -448,33 +445,38 @@ nnoremap <silent> <Leader>br :bd<cr>
 " Vimux Shit: "{{{
 
 " Use exising pane (not used by vim) if found instead of running split-window.
-let VimuxUseNearestPane = 1
+"let VimuxUseNearestPane = 1
 
-func! MoveWithTmux(keypressed,direction)
-    let k = a:keypressed
-    let d = a:direction
+"func! MoveWithTmux(keypressed,direction)
+    "let k = a:keypressed
+    "let d = a:direction
 
-    " I don't exactly know how this works, but it does
-    " Something like silently move to the next split, and see
-    " if we are still in the same split
-    let oldw = winnr()
-    silent! exe "normal! \<c-w>" . k
-    let neww = winnr()
-    silent! exe oldw.'wincmd w'
+    "" I don't exactly know how this works, but it does
+    "" Something like silently move to the next split, and see
+    "" if we are still in the same split
+    "let oldw = winnr()
+    "silent! exe "normal! \<c-w>" . k
+    "let neww = winnr()
+    "silent! exe oldw.'wincmd w'
 
-    " If we are in the same split, we must be at a
-    " boundary so tell tmux to switch split
-    if oldw == neww
-        exec '!tmux select-pane ' . d
-    else
-        exe "normal! \<c-w>" . k
-    end
-endfunction
+    "" If we are in the same split, we must be at a
+    "" boundary so tell tmux to switch split
+    "if oldw == neww
+        "exec '!tmux select-pane ' . d
+    "else
+        "exe "normal! \<c-w>" . k
+    "end
+"endfunction
 
-"nnoremap <silent> <c-j> :call MoveWithTmux('j', '-D')<cr><cr>2k<cr>
-"nnoremap <silent> <c-k> :call MoveWithTmux('k', '-U')<cr><cr>2k<cr>
+nnoremap <silent> <c-n> :TmuxNavigateDown<cr>
+nnoremap <silent> <c-e> :TmuxNavigateUp<cr>
+nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <c-i> :TmuxNavigateRight<cr>
+
+"nnoremap <silent> <c-n> :call MoveWithTmux('j', '-D')<cr><cr>2k<cr>
+"nnoremap <silent> <c-e> :call MoveWithTmux('k', '-U')<cr><cr>2k<cr>
 "nnoremap <silent> <c-h> :call MoveWithTmux('h', '-L')<cr><cr>2k<cr>
-"nnoremap <silent> <c-l> :call MoveWithTmux('l', '-R')<cr><cr>2k<cr>
+"nnoremap <silent> <c-i> :call MoveWithTmux('l', '-R')<cr><cr>2k<cr>
 
 " Open tmux in a split.
 map <Leader>ro :call OpenShellSplit()<cr>
