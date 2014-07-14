@@ -114,9 +114,6 @@ filetype off
 set rtp+=~/.vim/bundle/vundle/
 set rtp+=~/.vim/bundle/igor/
 set rtp+=~/.vim/bclose/ " <leader>bd without changing split layout.
-"set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
-"set rtp+=~/.local/lib/python2.7/site-packages/powerline/bindings/vim/
-" set rtp+=~/.vim/bundle/upAndDown/
 
 call vundle#rc()
 "}}}
@@ -161,6 +158,13 @@ Bundle 'majutsushi/tagbar'
 "}}}
 
 " Plugin Specifics: "{{{
+" EasyMotion
+map <Leader><Leader>t <Plug>(easymotion-lineforward)
+map <Leader><Leader>n <Plug>(easymotion-j)
+map <Leader><Leader>e <Plug>(easymotion-k)
+map <Leader><Leader>s <Plug>(easymotion-linebackward)
+
+let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
 " Tmux colemak nav
 let g:tmux_navigator_no_mappings = 1
 
