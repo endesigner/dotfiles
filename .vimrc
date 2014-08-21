@@ -154,10 +154,17 @@ Bundle 'plasticboy/vim-markdown'
 Bundle 'christoomey/vim-tmux-navigator'
 Bundle 'vim-scripts/Vim-R-plugin'
 Bundle 'majutsushi/tagbar'
+Bundle 'bling/vim-bufferline'
 
 "}}}
 
 " Plugin Specifics: "{{{
+" Bufferline
+let g:bufferline_echo = 0
+autocmd VimEnter *
+      \ let &statusline='%{bufferline#refresh_status()}'
+      \ .bufferline#get_status_string()
+
 " EasyMotion
 map <Leader><Leader>t <Plug>(easymotion-lineforward)
 map <Leader><Leader>n <Plug>(easymotion-j)
