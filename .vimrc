@@ -277,6 +277,16 @@ let mapleader=','
 " Unite grep
 nnoremap <silent> <leader>g :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
 
+" Unite file explorer
+nnoremap <leader>f :<C-u>Unite -start-insert file<cr>
+
+" Unite buffer custom settings
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+  nnoremap <buffer><expr> n unite#mappings#cursor_down(1)
+  nnoremap <buffer><expr> e unite#mappings#cursor_up(1)
+endfunction!
+
 " Reload haskell
 nnoremap <leader>rr :call VimuxRunCommand(":l " . bufname("%"))<cr>
 au! BufWritePost *.hs call VimuxRunCommand(":l " . bufname("%"))
