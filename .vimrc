@@ -137,7 +137,6 @@ Bundle 'kien/ctrlp.vim'
 Bundle 'oscarh/vimerl'
 Bundle 'endesigner/vim-upAndDown'
 Bundle 'digitaltoad/vim-jade'
-Bundle 'tpope/vim-vinegar'
 
 " Snipmate stuff
 Bundle 'garbas/vim-snipmate'
@@ -278,7 +277,8 @@ let mapleader=','
 nnoremap <silent> <leader>g :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
 
 " Unite file explorer
-nnoremap <leader>f :<C-u>Unite -start-insert file<cr>
+"nnoremap - :<C-u>Unite -start-insert file<cr>
+nnoremap - :<C-u>Unite file<cr>
 
 " Unite buffer custom settings
 autocmd FileType unite call s:unite_settings()
