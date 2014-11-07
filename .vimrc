@@ -34,8 +34,11 @@ set nosi si
 " prevent windows from resizing
 set noea
 set bg=dark
-" Wrap lines
-" set tw=72
+
+" Autowrap lines
+set tw=79
+set formatoptions+=t
+
 set fo=cqt
 set wm=0
 set is " incsearch
@@ -129,20 +132,22 @@ Bundle 'bling/vim-airline'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'Shougo/unite.vim'
 Bundle 'Shougo/vimproc.vim'
+Bundle 'Shougo/neomru.vim'
+Bundle 'osyo-manga/unite-quickfix'
 Bundle 'benmills/vimux'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
-Bundle 'kien/ctrlp.vim'
 Bundle 'oscarh/vimerl'
 Bundle 'endesigner/vim-upAndDown'
 Bundle 'digitaltoad/vim-jade'
+Bundle 'marijnh/tern_for_vim'
 
 " Snipmate stuff
 Bundle 'garbas/vim-snipmate'
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
-"Bundle "honza/snipmate-snippets"
+Bundle "honza/vim-snippets"
 
 Bundle 'pangloss/vim-javascript'
 Bundle 'tpope/vim-fugitive'
@@ -154,10 +159,18 @@ Bundle 'christoomey/vim-tmux-navigator'
 Bundle 'vim-scripts/Vim-R-plugin'
 Bundle 'majutsushi/tagbar'
 Bundle 'bling/vim-bufferline'
+Bundle 'airblade/vim-rooter'
+Bundle 'wting/rust.vim'
+
+Bundle 'mxw/vim-jsx'
 
 "}}}
 
 " Plugin Specifics: "{{{
+
+" Syntastic
+let g:syntastic_always_populate_loc_list=1
+
 " Bufferline
 let g:bufferline_echo = 0
 autocmd VimEnter *
@@ -165,10 +178,10 @@ autocmd VimEnter *
       \ .bufferline#get_status_string()
 
 " EasyMotion
-map <Leader><Leader>t <Plug>(easymotion-lineforward)
-map <Leader><Leader>n <Plug>(easymotion-j)
-map <Leader><Leader>e <Plug>(easymotion-k)
-map <Leader><Leader>s <Plug>(easymotion-linebackward)
+map <Leader>t <Plug>(easymotion-lineforward)
+map <Leader>n <Plug>(easymotion-j)
+map <Leader>e <Plug>(easymotion-k)
+map <Leader>s <Plug>(easymotion-linebackward)
 
 let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
 " Tmux colemak nav
@@ -192,9 +205,6 @@ let g:airline_powerline_fonts = 1
 
 " TagBar
 let g:tagbar_compact = 1
-
-" CtrlP keeps directory after CtrlPDir
-let g:ctrlp_working_path_mode = 2
 
 " Markdown
 let g:vim_markdown_folding_disabled=1
@@ -249,11 +259,11 @@ autocmd BufRead *
 
 
 " autochange to the directory of current working file (useful shit!)
-"if exists('+autochdir')
-  "set autochdir
-"else
-  "autocmd BufEnter * silent! lcd %:p:h:gs/ /\\ /
-"endif
+if exists('+autochdir')
+  set autochdir
+else
+  autocmd BufEnter * silent! lcd %:p:h:gs/ /\\ /
+endif
 
 " quit if quickfix is last window
 au BufEnter * call MyLastWindow()
@@ -274,17 +284,30 @@ endfunction
 let mapleader=','
 
 " Unite grep
-nnoremap <silent> <leader>g :<C-u>Unite grep:. -buffer-name=search-buffer<CR>
+nnoremap <silent> <leader>g :<C-u>Unite grep:. -no-split -buffer-name=search-buffer<CR>
+nnoremap <silent> <leader>G :<C-u>Unite grep:.:-s:\(TODO\|FIXME\) -no-split -buffer-name=search-buffer<CR>
 
 " Unite file explorer
-"nnoremap - :<C-u>Unite -start-insert file<cr>
-nnoremap - :<C-u>Unite file<cr>
+nnoremap - :<C-u>Unite -no-split -start-insert file_rec/async<cr>
+nnoremap F :Unite -no-split -start-insert buffer tab file_mru directory_mru<cr>
 
 " Unite buffer custom settings
 autocmd FileType unite call s:unite_settings()
 function! s:unite_settings()
+  let b:SuperTabDisabled=1
+
   nnoremap <buffer><expr> n unite#mappings#cursor_down(1)
   nnoremap <buffer><expr> e unite#mappings#cursor_up(1)
+
+  imap <buffer> <C-n> <Plug>(unite_select_next_line)
+  imap <buffer> <C-e> <Plug>(unite_select_previous_line)
+  imap <buffer> <c-a> <Plug>(unite_choose_action)
+
+  imap <silent><buffer><expr> <C-s> unite#do_action('split')
+  imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+  imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
+
+  nmap <buffer> <ESC> <Plug>(unite_exit)
 endfunction!
 
 " Reload haskell
@@ -292,8 +315,8 @@ nnoremap <leader>rr :call VimuxRunCommand(":l " . bufname("%"))<cr>
 au! BufWritePost *.hs call VimuxRunCommand(":l " . bufname("%"))
 
 " Cycle buffers with arrows.
-map <down> :bn<cr>
-map <up> :bp<cr>
+map <right> :bn<cr>
+map <left> :bp<cr>
 
 " Quickfix window navigation
 nmap <silent> <leader>m :call QuickfixToggle()<cr>
@@ -311,11 +334,8 @@ function! QuickfixToggle()
 endfunction
 
 " Make it easy to update vimrc
-nmap <Leader>s :source ~/.vimrc<cr>
-nmap <Leader>v :tabnew ~/.vimrc<cr>
-
-" Run make and show quickfix window
-nmap <Leader>l :call Make()<cr>
+nmap <Leader><Leader>s :source ~/.vimrc<cr>
+nmap <Leader>v :e ~/.vimrc<cr>
 
 " Cut
 vnoremap <C-X> "+x
@@ -427,7 +447,7 @@ nnoremap <silent> <leader>- ma<esc>j"_dd<esc>`a
 " Duplicate  current line
 nnoremap <silent> <Leader>d ma<esc>yyp<cr>`a
 
-nnoremap <silent> <RIGHT> :TagbarToggle<CR>
+nnoremap <silent> <down> :TagbarToggle<CR>
 
 " Tab navigation like firefox
 nmap <silent> <C-S-tab> :tabprevious<cr>
