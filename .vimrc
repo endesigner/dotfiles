@@ -2,6 +2,9 @@
 "
 " General Settings: "{{{
 
+set wildmode=longest,list,full
+set wildmenu
+
 " switch between buffers without saving
 set hidden
 " ignore case for searching
@@ -21,31 +24,30 @@ set listchars=tab:>.,trail:.,extends:>,precedes:<,
 set list
 set encoding=utf8
 set fileencoding=utf8
-set ts=4
-set sw=4
+set ts=2
+set sw=2
 set nosta sta
-set sts=4
+set sts=2
 set noet et
 set ai noai
 set nosi si
 " prevent windows from resizing
 set noea
 set bg=dark
-<<<<<<< HEAD
-=======
-" Wrap lines
-" set tw=72
->>>>>>> be5bee38beb2659162d6c80b1fe10e4fb2b55d83
+" Autowrap lines
+set tw=79
+set formatoptions+=t
+
 set fo=cqt
 set wm=0
 set is " incsearch
+
 " disable folding
 set nofoldenable
 
-<<<<<<< HEAD
 " Display color column to guide manual text weapping.
 set colorcolumn=80
-=======
+
 " Enable mouse
 set mouse=a
 
@@ -57,7 +59,9 @@ set ruler
 set cmdheight=1
 set laststatus=2
 set statusline=%F%h%m%w%r\ %Y\ (%{&ff})%=\ %c%V,\ %l/%L\ (%P)
->>>>>>> be5bee38beb2659162d6c80b1fe10e4fb2b55d83
+
+" Disable automatic comment insertioen
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " line numbers
 set nu
@@ -111,16 +115,11 @@ let g:ackprg = 'ag --nogroup --nocolor --column'
 "
 " see :h vundle for more details or wiki for FAQ
 " NOTE: comments after Bundle command are not allowed..
-
 set nocompatible
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 set rtp+=~/.vim/bundle/igor/
 set rtp+=~/.vim/bclose/ " <leader>bd without changing split layout.
-"set rtp+=~/.vim/bundle/powerline/powerline/bindings/vim
-"set rtp+=~/.local/lib/python2.7/site-packages/powerline/bindings/vim/
-" set rtp+=~/.vim/bundle/upAndDown/
-
 call vundle#rc()
 "}}}
 
@@ -131,21 +130,26 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 
 " Everything else
+Bundle 'bling/vim-airline'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'Shougo/unite.vim'
+Bundle 'Shougo/vimproc.vim'
+Bundle 'Shougo/neomru.vim'
+Bundle 'osyo-manga/unite-quickfix'
 Bundle 'benmills/vimux'
 Bundle 'tpope/vim-surround'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
-Bundle 'kien/ctrlp.vim'
 Bundle 'oscarh/vimerl'
 Bundle 'endesigner/vim-upAndDown'
 Bundle 'digitaltoad/vim-jade'
-Bundle 'tpope/vim-vinegar'
+Bundle 'marijnh/tern_for_vim'
 
 " Snipmate stuff
 Bundle 'garbas/vim-snipmate'
 Bundle "MarcWeber/vim-addon-mw-utils"
 Bundle "tomtom/tlib_vim"
-Bundle "honza/snipmate-snippets"
+Bundle "honza/vim-snippets"
 
 Bundle 'pangloss/vim-javascript'
 Bundle 'tpope/vim-fugitive'
@@ -154,14 +158,55 @@ Bundle 'mileszs/ack.vim'
 Bundle 'godlygeek/tabular'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'christoomey/vim-tmux-navigator'
+Bundle 'vim-scripts/Vim-R-plugin'
+Bundle 'majutsushi/tagbar'
+Bundle 'bling/vim-bufferline'
+Bundle 'airblade/vim-rooter'
+Bundle 'wting/rust.vim'
+
+Bundle 'mxw/vim-jsx'
+
 "}}}
 
 " Plugin Specifics: "{{{
+" Syntastic
+let g:syntastic_always_populate_loc_list=1
+
+" Bufferline
+let g:bufferline_echo = 0
+autocmd VimEnter *
+      \ let &statusline='%{bufferline#refresh_status()}'
+      \ .bufferline#get_status_string()
+
+" EasyMotion
+map <Leader>t <Plug>(easymotion-lineforward)
+map <Leader>n <Plug>(easymotion-j)
+map <Leader>e <Plug>(easymotion-k)
+map <Leader>s <Plug>(easymotion-linebackward)
+
+let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
+
+" Tmux colemak nav
+let g:tmux_navigator_no_mappings = 1
+
+nnoremap <silent> <c-s> :TmuxNavigateLeft<cr>
+nnoremap <silent> <c-n> :TmuxNavigateDown<cr>
+nnoremap <silent> <c-e> :TmuxNavigateUp<cr>
+nnoremap <silent> <c-t> :TmuxNavigateRight<cr>
+"nnoremap <silent> {Previous-Mapping} :TmuxNavigatePrevious<cr>
+
+if executable('ag')
+    let g:unite_source_grep_command = 'ag'
+    let g:unite_source_grep_default_opts = '--nogroup --nocolor'
+    let g:unite_source_grep_recursive_opt = ''
+    let g:unite_source_grep_encoding = 'utf-8'
+endif
+
+" Airline
+let g:airline_powerline_fonts = 1
+
 " TagBar
 let g:tagbar_compact = 1
-
-" CtrlP keeps directory after CtrlPDir
-let g:ctrlp_working_path_mode = 2
 
 " Markdown
 let g:vim_markdown_folding_disabled=1
@@ -240,9 +285,40 @@ endfunction
 " Set <Leader> key to ','
 let mapleader=','
 
+" Unite grep
+nnoremap <silent> <leader>g :<C-u>Unite grep:. -no-split -buffer-name=search-buffer<CR>
+nnoremap <silent> <leader>G :<C-u>Unite grep:.:-s:\(TODO\|FIXME\) -no-split -buffer-name=search-buffer<CR>
+
+" Unite file explorer
+nnoremap - :<C-u>Unite -no-split -start-insert file_rec/async<cr>
+nnoremap F :Unite -no-split -start-insert buffer tab file_mru directory_mru<cr>
+
+" Unite buffer custom settings
+autocmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+  let b:SuperTabDisabled=1
+
+  nnoremap <buffer><expr> n unite#mappings#cursor_down(1)
+  nnoremap <buffer><expr> e unite#mappings#cursor_up(1)
+
+  imap <buffer> <C-n> <Plug>(unite_select_next_line)
+  imap <buffer> <C-e> <Plug>(unite_select_previous_line)
+  imap <buffer> <c-a> <Plug>(unite_choose_action)
+
+  imap <silent><buffer><expr> <C-s> unite#do_action('split')
+  imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+  imap <silent><buffer><expr> <C-t> unite#do_action('tabopen')
+
+  nmap <buffer> <ESC> <Plug>(unite_exit)
+endfunction!
+
+" Reload haskell
+nnoremap <leader>rr :call VimuxRunCommand(":l " . bufname("%"))<cr>
+au! BufWritePost *.hs call VimuxRunCommand(":l " . bufname("%"))
+
 " Cycle buffers with arrows.
-map <down> :bn<cr>
-map <up> :bp<cr>
+map <right> :bn<cr>
+map <left> :bp<cr>
 
 " Quickfix window navigation
 nmap <silent> <leader>m :call QuickfixToggle()<cr>
@@ -259,15 +335,9 @@ function! QuickfixToggle()
     endif
 endfunction
 
-nmap <silent> <leader>. :cn<cr>
-nmap <silent> <leader>, :cp<cr>
-
 " Make it easy to update vimrc
-nmap <Leader>s :source ~/.vimrc<cr>
-nmap <Leader>v :tabnew ~/.vimrc<cr>
-
-" Run make and show quickfix window
-nmap <Leader>l :call Make()<cr>
+nmap <Leader><Leader>s :source ~/.vimrc<cr>
+nmap <Leader>v :e ~/.vimrc<cr>
 
 " Cut
 vnoremap <C-X> "+x
@@ -280,14 +350,26 @@ map <C-V> "+gP
 cmap <C-V> <C-R>+
 
 " Copy from X11 clipboard
-vmap <F7> "+ygv"zy`>
-" Paste from X11 clipboard (Shift-F7 to paste after normal cursor, Ctrl-F7 to paste over visual selection)
-nmap <F7> "zgP
-nmap <S-F7> "zgp
-imap <F7> <C-r><C-o>z
-vmap <C-F7> "zp`]
-cmap <F7> <C-r><C-o>z
-autocmd FocusGained * let @z=@+
+nnoremap <leader>y "+y
+vnoremap <leader>y "+y
+
+nnoremap <leader>Y "+Y
+vnoremap <leader>Y "+Y
+
+nnoremap <leader>p "+p
+vnoremap <leader>p "+p
+
+nnoremap <leader>P "+P
+vnoremap <leader>P "+P
+
+"vmap <F7> "+ygv"zy`>
+"" Paste from X11 clipboard (Shift-F7 to paste after normal cursor, Ctrl-F7 to paste over visual selection)
+"nmap <F7> "zgP
+"nmap <S-F7> "zgp
+"imap <F7> <C-r><C-o>z
+"vmap <C-F7> "zp`]
+"cmap <F7> <C-r><C-o>z
+"autocmd FocusGained * let @z=@+
 
 " Pasting blockwise and linewise selections is not possible in Insert and
 " Visual mode without the +virtualedit feature.  They are pasted as if they
@@ -314,10 +396,10 @@ set backspace=indent,eol,start whichwrap+=<,>,[,]
 vnoremap <BS> d
 
 " Scroll a bit faster
-nnoremap <silent> <C-n> :call SetScrolloff()<esc>3gj
-nnoremap <silent> <C-e> :call SetScrolloff()<esc>3gk
-vnoremap <silent> <C-n> :call SetScrolloff()<esc>gv3gj
-vnoremap <silent> <C-e> :call SetScrolloff()<esc>gv3gk
+nnoremap <silent> <s-n> :call SetScrolloff()<esc>3gj
+nnoremap <silent> <s-e> :call SetScrolloff()<esc>3gk
+vnoremap <silent> <s-n> :call SetScrolloff()<esc>gv3gj
+vnoremap <silent> <s-e> :call SetScrolloff()<esc>gv3gk
 
 " Always keep cursor in the center
 "nnoremap <silent> j :call SetScrolloff()<esc>gj
@@ -325,6 +407,7 @@ vnoremap <silent> <C-e> :call SetScrolloff()<esc>gv3gk
 "vnoremap <silent> j :call SetScrolloff()<esc>gvgj
 "vnoremap <silent> k :call SetScrolloff()<esc>gvgk
 
+" Colemak bindings {{{
 nnoremap <silent> n :call SetScrolloff()<esc>gj
 nnoremap <silent> e :call SetScrolloff()<esc>gk
 vnoremap <silent> n :call SetScrolloff()<esc>gvgj
@@ -334,6 +417,13 @@ noremap n j|noremap <C-w>n <C-w>j|noremap <C-w><C-n> <C-w>j
 noremap e k|noremap <C-w>e <C-w>k|noremap <C-w><C-e> <C-w>k
 noremap s h
 noremap t l
+noremap f e
+
+"imap <silent> <C-h> <C-o>h
+"imap <silent> <C-n> <C-o>j
+"imap <silent> <C-e> <C-o>k
+"imap <silent> <C-i> <C-o>l
+"}}}
 
 " Search mappings: These will make it so that going to the next one in a
 " search will center on the line it's found in.
@@ -361,7 +451,7 @@ nnoremap <silent> <leader>- ma<esc>j"_dd<esc>`a
 " Duplicate  current line
 nnoremap <silent> <Leader>d ma<esc>yyp<cr>`a
 
-nnoremap <silent> <RIGHT> :TagbarToggle<CR>
+nnoremap <silent> <down> :TagbarToggle<CR>
 
 " Tab navigation like firefox
 nmap <silent> <C-S-tab> :tabprevious<cr>
@@ -376,27 +466,18 @@ imap <silent> <C-tab> <ESC>:tabnext<cr>i
 nmap <silent> <C-t> :tabnew<cr>
 imap <silent> <C-t> <ESC>:tabnew<cr>
 
-" Move with hjkl in insert mode
-imap <silent> <C-h> <C-o>h
-imap <silent> <C-j> <C-o>n
-imap <silent> <C-k> <C-o>e
-imap <silent> <C-l> <C-o>i
-"imap <silent> <C-h> <C-o>h
-"imap <silent> <C-j> <C-o>j
-"imap <silent> <C-k> <C-o>k
-"imap <silent> <C-l> <C-o>l
 " Clears highlighting of a search
 map <silent> <leader>/ :let @/ = ""<cr>
 
 " Move between splits
-nnoremap <silent> <C-A-k> <C-W>W
-nnoremap <silent> <C-A-h> <C-W>h
-nnoremap <silent> <C-A-j> <C-W>w
-nnoremap <silent> <C-A-l> <C-W>l
+"nnoremap <silent> <C-A-k> <C-W>W
+"nnoremap <silent> <C-A-h> <C-W>h
+"nnoremap <silent> <C-A-j> <C-W>w
+"nnoremap <silent> <C-A-l> <C-W>l
 
-nnoremap <silent> <C-A-Up> <C-W>k<C-W>_
-nnoremap <silent> <C-A-Down> <C-W>j<C-W>_
-nnoremap <silent> <C-A-Enter> <C-W>_
+"nnoremap <silent> <C-A-Up> <C-W>k<C-W>_
+"nnoremap <silent> <C-A-Down> <C-W>j<C-W>_
+"nnoremap <silent> <C-A-Enter> <C-W>_
 
 " Remove current buffer
 nnoremap <silent> <Leader>br :bd<cr>
@@ -406,33 +487,38 @@ nnoremap <silent> <Leader>br :bd<cr>
 " Vimux Shit: "{{{
 
 " Use exising pane (not used by vim) if found instead of running split-window.
-let VimuxUseNearestPane = 1
+"let VimuxUseNearestPane = 1
 
-func! MoveWithTmux(keypressed,direction)
-    let k = a:keypressed
-    let d = a:direction
+"func! MoveWithTmux(keypressed,direction)
+    "let k = a:keypressed
+    "let d = a:direction
 
-    " I don't exactly know how this works, but it does
-    " Something like silently move to the next split, and see
-    " if we are still in the same split
-    let oldw = winnr()
-    silent! exe "normal! \<c-w>" . k
-    let neww = winnr()
-    silent! exe oldw.'wincmd w'
+    "" I don't exactly know how this works, but it does
+    "" Something like silently move to the next split, and see
+    "" if we are still in the same split
+    "let oldw = winnr()
+    "silent! exe "normal! \<c-w>" . k
+    "let neww = winnr()
+    "silent! exe oldw.'wincmd w'
 
-    " If we are in the same split, we must be at a
-    " boundary so tell tmux to switch split
-    if oldw == neww
-        exec '!tmux select-pane ' . d
-    else
-        exe "normal! \<c-w>" . k
-    end
-endfunction
+    "" If we are in the same split, we must be at a
+    "" boundary so tell tmux to switch split
+    "if oldw == neww
+        "exec '!tmux select-pane ' . d
+    "else
+        "exe "normal! \<c-w>" . k
+    "end
+"endfunction
 
-"nnoremap <silent> <c-j> :call MoveWithTmux('j', '-D')<cr><cr>2k<cr>
-"nnoremap <silent> <c-k> :call MoveWithTmux('k', '-U')<cr><cr>2k<cr>
+nnoremap <silent> <c-n> :TmuxNavigateDown<cr>
+nnoremap <silent> <c-e> :TmuxNavigateUp<cr>
+nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
+nnoremap <silent> <c-i> :TmuxNavigateRight<cr>
+
+"nnoremap <silent> <c-n> :call MoveWithTmux('j', '-D')<cr><cr>2k<cr>
+"nnoremap <silent> <c-e> :call MoveWithTmux('k', '-U')<cr><cr>2k<cr>
 "nnoremap <silent> <c-h> :call MoveWithTmux('h', '-L')<cr><cr>2k<cr>
-"nnoremap <silent> <c-l> :call MoveWithTmux('l', '-R')<cr><cr>2k<cr>
+"nnoremap <silent> <c-i> :call MoveWithTmux('l', '-R')<cr><cr>2k<cr>
 
 " Open tmux in a split.
 map <Leader>ro :call OpenShellSplit()<cr>
@@ -570,3 +656,16 @@ func! Make()
 endfunc
 
 let g:VimuxResetSequence = ''
+
+" Lines added by the Vim-R-plugin command :RpluginConfig (2014-Mar-29 14:47):
+" Change the <LocalLeader> key:
+let maplocalleader = ","
+" Use Ctrl+Space to do omnicompletion:
+if has("gui_running")
+    inoremap <C-Space> <C-x><C-o>
+else
+    inoremap <Nul> <C-x><C-o>
+endif
+" Press the space bar to send lines (in Normal mode) and selections to R:
+vmap <Space> <Plug>RDSendSelection
+nmap <Space> <Plug>RDSendLine

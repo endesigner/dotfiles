@@ -1,9 +1,3 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =7
-let g:netrw_dirhist_1='/usr/share/gnome-session/sessions'
-let g:netrw_dirhist_2='/home/igor/.gconf'
-let g:netrw_dirhist_3='/home/igor/.gconf/apps'
-let g:netrw_dirhist_4='/home/igor/.gconf/apps/gnome-terminal'
-let g:netrw_dirhist_5='/home/igor/.gconf/apps/gnome-terminal/profiles'
-let g:netrw_dirhist_6='/home/igor/.gconf/apps/gnome-terminal/profiles/Default'
-let g:netrw_dirhist_7='/home/igor/notes'
+let g:netrw_dirhist_cnt =1
+let g:netrw_dirhist_1='/home/igor/react-test/build'
