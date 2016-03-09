@@ -12,6 +12,9 @@ Plugin 'Shougo/unite.vim'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx'
+let g:jsx_ext_required = 0
+
 Plugin 'tpope/vim-surround'
 Plugin 'benmills/vimux'
 
