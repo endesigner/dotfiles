@@ -1,8 +1,19 @@
-[alias]
-    lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-    tree = log --graph --decorate --pretty=oneline --abbrev-commit
 [user]
-    name = endesigner
-    email = igor@endesigner.se
+  email = github@endesigner.se
+  name = endesigner
+[push]
+  default = simple
 [core]
-    excludesfile = $HOME/.gitignore_global
+  autocrlf = input
+  editor = vim
+[alias]
+  lg = log --graph --color --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+  dt = diff-tree --no-commit-id --name-only -r
+  st = status -sb
+  ch = checkout
+  sh = !sh -c 'git show --color --pretty=format:%b $1'
+  new = !sh -c 'git lg $1@{1}..$1@{0} "$@"'
+[pull]
+  rebase = true
+[branch]
+  autosetuprebase = always
