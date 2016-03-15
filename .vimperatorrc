@@ -13,7 +13,9 @@ nnoremap <C-BS> gU
 
 nnoremap <BS> gu
 nnoremap H H
+nnoremap <C-H> H
 nnoremap I L
+nnoremap <C-I> L
 
 nnoremap n 3j
 nnoremap e 3k
