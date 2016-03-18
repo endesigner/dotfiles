@@ -4,6 +4,7 @@
 [push]
   default = simple
 [core]
+  excludesfile = $HOME/.gitignore_global
   autocrlf = input
   editor = vim
 [alias]
@@ -13,7 +14,10 @@
   ch = checkout
   sh = !sh -c 'git show --color --pretty=format:%b $1'
   new = !sh -c 'git lg $1@{1}..$1@{0} "$@"'
+  tree = log --graph --decorate --pretty=oneline --abbrev-commit
 [pull]
   rebase = true
+[push]
+  default = current
 [branch]
   autosetuprebase = always
