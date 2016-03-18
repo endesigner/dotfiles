@@ -1,5 +1,6 @@
 # Downloaded Vundle bundles
 .vim/.netrwhist
+.config/nvim/.netrwhist
 .vim/bundle/*
 !.vim/bundle/vundle
 .ghc/ghci_history

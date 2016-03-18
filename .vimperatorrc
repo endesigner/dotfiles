@@ -1,0 +1,33 @@
+source! /home/igor/.vimperatorrc.local
+
+" completion priority in :[tab]open
+" bookmarks, suggestions, awesome bar
+set complete=btSl
+set hintchars=hneijklasdfgyuopqwrtmzxcvb
+
+set visualbell
+hi Bell display: none;
+
+nnoremap <BS> gu
+nnoremap <C-BS> gU
+
+nnoremap <BS> gu
+nnoremap H H
+nnoremap <C-H> H
+nnoremap I L
+nnoremap <C-I> L
+
+nnoremap n 3j
+nnoremap e 3k
+nnoremap N 10j
+nnoremap E 10k
+
+let mapleader=','
+noremap <Leader>r :source ~/.vimperatorrc<CR>
+noremap <Leader>b :bmarks<CR>
+
+noremap k n
+noremap K N
+
+
+" vim: set ft=vimperator:
