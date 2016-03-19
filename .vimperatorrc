@@ -17,10 +17,18 @@ nnoremap <C-H> H
 nnoremap I L
 nnoremap <C-I> L
 
+" Another way to do search
+nnoremap <C-f> /
+
+" Colemak bindings
 nnoremap n 3j
 nnoremap e 3k
 nnoremap N 10j
 nnoremap E 10k
+
+" Sidebar selection with s, close with S
+map s :sidebar<SPACE>
+map S :sbclose<CR>
 
 let mapleader=','
 noremap <Leader>r :source ~/.vimperatorrc<CR>
