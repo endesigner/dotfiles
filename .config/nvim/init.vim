@@ -1,3 +1,5 @@
+set nocompatible
+filetype off
 set rtp+=~/.neovim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
@@ -8,21 +10,16 @@ Plugin 'bling/vim-bufferline'
 Plugin 'bling/vim-airline'
 Plugin 'ervandew/supertab'
 Plugin 'Lokaltog/vim-easymotion'
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/vimproc.vim'
 Plugin 'christoomey/vim-tmux-navigator'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
-let g:jsx_ext_required = 0
-
 Plugin 'tpope/vim-surround'
 Plugin 'benmills/vimux'
-
 Plugin 'guns/vim-clojure-static'
 Plugin 'tpope/vim-sexp-mappings-for-regular-people'
 Plugin 'guns/vim-sexp'
 Plugin 'tpope/vim-repeat'
-
+Plugin 'ctrlpvim/ctrlp.vim'
 call vundle#end()
 filetype plugin indent on
 
@@ -63,6 +60,27 @@ set fileencoding=utf-8
 
 " line numbers
 set nu
+
+let g:jsx_ext_required = 0
+
+function! s:get_visual_selection()
+  let [lnum1, col1] = getpos("'<")[1:2]
+  let [lnum2, col2] = getpos("'>")[1:2]
+  let lines = getline(lnum1, lnum2)
+  let lines[-1] = lines[-1][: col2 - (&selection == 'inclusive' ? 1 : 2)]
+  let lines[0] = lines[0][col1 - 1:]
+  return join(lines, "\n")
+endfunction
+
+" Clojure autocomplete
+au Bufenter,Bufnewfile *.clj setl complete+=k~/.clj_completions
+
+function! ExecRange()
+  call VimuxRunCommand(s:get_visual_selection())
+endfunction
+
+nnoremap Q :call ExecRange()<CR>
+vnoremap Q :call ExecRange()<CR>
 
 " This setting ensures that each window contains a statusline that displays the current cursor position.
 set ruler
@@ -143,42 +161,20 @@ let config_file = "~/.config/nvim/init.vim"
 nmap <Leader><Leader>s :exec ':source' . config_file<cr>
 nmap <Leader>v :exec ':e' . config_file<cr>
 
-" Unite
-"let g:unite_source_rec_async_command='ag -l --nocolor --nogroup --ignore ".hg" --ignore-dir=node_modules --ignore-dir=log --ignore-dir=app --ignore-dir=mock --ignore ".svn" --ignore ".git" --ignore ".bzr" --hidden -g ""'
-let g:unite_source_grep_command='ag'
-let g:unite_source_grep_recursive_opt = ''
-let g:unite_source_grep_default_opts='
-      \ --nocolor
-      \ --nogroup
-      \ --line-numbers
-      \ --ignore-dir=node_modules
-      \ --ignore-dir=log
-      \ --ignore-dir=mock'
+" CTRLP
+" Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
+if executable('ag')
+  " Use Ag over Grep
+  set grepprg=ag\ --nogroup\ --nocolor\ --column
+  set grepformat=%f:%l:%c%m
 
-call unite#custom#source('file_rec/async', 'ignore_pattern', 'node_modules/\|flight/\|mock/\|vendor/\|public/\|tmp/')
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
-" Unite file explorer
-nnoremap - :<C-u>Unite -no-split -start-insert file_rec/async<cr>
-nnoremap F :<C-u>Unite -no-split -buffer-name=buffer buffer<cr>
-
-" Unite grep
-nnoremap <silent> <leader>g :<C-u>Unite grep:. -no-split -buffer-name=search-buffer<CR>
-nnoremap <silent> <leader>G :<C-u>Unite grep:.:-s:\(TODO\|FIXME\) -no-split -buffer-name=search-buffer<CR>
-
-" Unite buffer custom settings
-autocmd FileType unite call s:unite_settings()
-function! s:unite_settings()
-  let b:SuperTabDisabled=1
-
-  nnoremap <buffer><expr> n unite#mappings#cursor_down(1)
-  nnoremap <buffer><expr> e unite#mappings#cursor_up(1)
-
-  imap <buffer> <C-n> <Plug>(unite_select_next_line)
-  imap <buffer> <C-e> <Plug>(unite_select_previous_line)
-  imap <buffer> <c-a> <Plug>(unite_choose_action)
-
-  nmap <buffer> <space> <cr>
-endfunction!
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+nnoremap - :CtrlP<cr>
 
 " Airline
 let g:airline_right_alt_sep = ''
