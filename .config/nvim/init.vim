@@ -163,13 +163,15 @@ nmap <Leader>v :exec ':e' . config_file<cr>
 
 " CTRLP
 " Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_clear_cache_on_exit = 1
 if executable('ag')
   " Use Ag over Grep
   set grepprg=ag\ --nogroup\ --nocolor\ --column
   set grepformat=%f:%l:%c%m
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
