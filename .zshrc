@@ -1,17 +1,6 @@
-[[ -s "$HOME/.rvm/bin" ]] && PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 [[ -s "$HOME/.bin/vim-bundle" ]] && PATH=$PATH:$HOME/.bin
 [[ -s "/opt/local/bin" ]] && PATH=$PATH:/opt/local/bin
-#PATH=$PATH:/opt/local/bin
-PATH=$PATH:/Users/igor/Library/adt-bundle-mac-x86_64-20130219/sdk/platform-tools
-export NODE_PATH=/usr/local/lib/jsctags/:$NODE_PATH
 EDITOR=vi
-
-# Keep history
-#export HISTSIZE=2000
-#export HISTFILE="$HOME/.history"
-#export SAVEHIST=$HISTSIZE
-#setopt hist_ignore_all_dups # Ignore history dupes
 
 export SAVEHIST=10000 # Number of entries
 export HISTSIZE=10000
@@ -83,3 +72,4 @@ func2 () {
         fi
     done
 }
+source ~/.zsh/zshalias
