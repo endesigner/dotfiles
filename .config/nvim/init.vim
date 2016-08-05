@@ -22,7 +22,8 @@ Plugin 'tpope/vim-repeat'
 Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-rails'
-Plugin 'scrooloose/nerdtree'
+Plugin 'kchmck/vim-coffee-script'
+"Plugin 'sjbach/lusty'
 
 call vundle#end()
 filetype plugin indent on
@@ -61,6 +62,8 @@ set sw=2
 set expandtab
 "set encoding=utf-8
 set fileencoding=utf-8
+" Highlight cursor line
+set cursorline
 
 " line numbers
 set nu
@@ -77,7 +80,7 @@ function! s:get_visual_selection()
 endfunction
 
 " Clojure autocomplete
-au Bufenter,Bufnewfile *.clj setl complete+=k~/.clj_completions
+au BufEnter,BufNewFile *.clj setl complete+=k~/.clj_completions
 
 function! ExecRange()
   call VimuxRunCommand(s:get_visual_selection())
@@ -185,6 +188,16 @@ if executable('ag')
   let g:ctrlp_use_caching = 0
 endif
 nnoremap - :CtrlP<cr>
+nnoremap _ :CtrlPBuffer<cr>
+
+" https://github.com/milkypostman/vim-togglelist
+au BufEnter *
+      \ if &buftype=='quickfix' |
+      \   nnoremap <buffer> q :echo "WHAAT" |
+      \ endif
+
+" bind K to grep word under cursor
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " Airline
 let g:airline_right_alt_sep = ''
@@ -212,8 +225,8 @@ nmap / <Plug>(easymotion-sn)
 let g:tmux_navigator_no_mappings = 1
 nnoremap <silent> <c-n> :TmuxNavigateDown<cr>
 nnoremap <silent> <c-e> :TmuxNavigateUp<cr>
-nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
-nnoremap <silent> <c-i> :TmuxNavigateRight<cr>
+nnoremap <silent> <c-s> :TmuxNavigateLeft<cr>
+nnoremap <silent> <c-t> :TmuxNavigateRight<cr>
 
 " Make sure vim receives keystrokes from tmux
 if &term =~ '^screen'
@@ -309,4 +322,4 @@ command! Kwbd call s:Kwbd(1)
 nnoremap <silent> <Plug>Kwbd :<C-u>Kwbd<CR>
 
 " Create a mapping (e.g. in your .vimrc) like this:
-"nmap <C-W>! <Plug>Kwbde
+nmap <C-W>! <Plug>Kwbde

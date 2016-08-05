@@ -1,6 +1,12 @@
 [[ -s "$HOME/.bin/vim-bundle" ]] && PATH=$PATH:$HOME/.bin
 [[ -s "/opt/local/bin" ]] && PATH=$PATH:/opt/local/bin
-EDITOR=vi
+eval "$(rbenv init -)"
+
+EDITOR=nvim
+VISUAL=nvim
+
+export LC_ALL=en_US.UTF-8  
+export LANG=en_US.UTF-8
 
 export SAVEHIST=10000 # Number of entries
 export HISTSIZE=10000
@@ -35,41 +41,21 @@ autoload -U colors && colors
 fpath=(~/.zsh/Completion $fpath)
 source ~/.zsh/zshrc.sh
 precmd () {
-    if [[ -a ".rvmrc" ]]; then
-        RVMINFO="%{$fg[green]%}$(rvm current)%{$reset_color%}"
+    if [[ -a ".ruby-version" ]]; then
+        RUBY_VERSION="%{$fg[green]%}$(rbenv local)%{$reset_color%}"
     else
-        RVMINFO=""
+        RUBY_VERSION=""
     fi
 
-    export RPROMPT="$(git_super_status) $RVMINFO"
+    export RPROMPT="$(git_super_status) $RUBY_VERSION"
     export PROMPT="${VIMODE} %~ "
 }
 
 alias tmux='TERM=xterm-256color tmux'
-alias vi='/usr/local/Cellar/macvim/7.3-66/MacVim.app/Contents/MacOS/Vim'
 setopt complete_in_word         # Not just at the end
 setopt always_to_end            # When complete from middle, move cursor
 
-func () {
-    myvar=($(ls ~/**/.rvmrc))
-    mypwd=$(pwd)
-    print "pwd: $mypwd"
-    #print "${myvar[(r)^'${mypwd}'*]}"
-    pat="^'${mypwd}'*"
-
-    for el in $myvar; do
-        if [[ ${myvar[(r)$pat]} -le ${#myvar} ]]; then
-            print "Found: ${myvar[(r)$pat]}"
-        fi
-    done
-}
-func2 () {
-    myvar=($(ls ~/**/.rvmrc))
-    mypwd=$(pwd)
-    for el in $myvar; do
-        if [[ $el == "${mypwd}/.rvmrc" ]]; then
-            print "$el is $mypwd"
-        fi
-    done
-}
 source ~/.zsh/zshalias
+
+export NVM_DIR="/Users/igor/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
