@@ -3,7 +3,7 @@ alias vi=nvim
 alias la="ls -la"
 alias ctags="`brew --prefix`/bin/ctags"
 
-export WORK=$HOME/work
+export WORK=$HOME/projects
 alias Portal="cd $WORK/portal"
 alias Site="cd $WORK/site"
 alias ..="cd .."

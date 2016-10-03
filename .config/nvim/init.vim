@@ -15,6 +15,7 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx'
 Plugin 'tpope/vim-surround'
 Plugin 'benmills/vimux'
+Plugin 'jgdavey/tslime.vim'
 Plugin 'guns/vim-clojure-static'
 Plugin 'tpope/vim-sexp-mappings-for-regular-people'
 Plugin 'guns/vim-sexp'
@@ -23,6 +24,10 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-rails'
 Plugin 'kchmck/vim-coffee-script'
+Plugin 'romainl/vim-qf'
+Plugin 'rking/ag.vim'
+Plugin 'tmhedberg/matchit'
+
 "Plugin 'sjbach/lusty'
 
 call vundle#end()
@@ -106,10 +111,6 @@ set backspace=indent,eol,start whichwrap+=<,>,[,]
 " Set <Leader> key to ','
 let mapleader=','
 
-" Nerd tree
-map <Leader>n :NERDTreeToggle<CR>
-let g:NERDTreeMapOpenExpl = 'E'
-
 " Backspace in Visual mode deletes selection
 vnoremap <BS> d
 
@@ -178,14 +179,17 @@ let g:ctrlp_show_hidden = 1
 let g:ctrlp_clear_cache_on_exit = 1
 if executable('ag')
   " Use Ag over Grep
-  set grepprg=ag\ --nogroup\ --nocolor\ --column
-  set grepformat=%f:%l:%c%m
+  set grepprg=ag\ --nogroup\ --nocolor
+  "set grepformat=%f:%l%m
 
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
   let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g ""'
 
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
+
+  " Search in regexp mode by default
+  let g:ctrlp_regexp = 1
 endif
 nnoremap - :CtrlP<cr>
 nnoremap _ :CtrlPBuffer<cr>
@@ -193,11 +197,11 @@ nnoremap _ :CtrlPBuffer<cr>
 " https://github.com/milkypostman/vim-togglelist
 au BufEnter *
       \ if &buftype=='quickfix' |
-      \   nnoremap <buffer> q :echo "WHAAT" |
+      \   nnoremap <buffer> q :ccl<cr> |
       \ endif
 
-" bind K to grep word under cursor
-nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+" bind k to grep word under cursor
+nnoremap <silent> <C-f> :Ag! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " Airline
 let g:airline_right_alt_sep = ''
@@ -236,6 +240,11 @@ if &term =~ '^screen'
     execute "set <xRight>=\e[1;*C"
     execute "set <xLeft>=\e[1;*D"
 endif
+
+" Tslime
+vmap <leader>c <Plug>SendSelectionToTmux
+nmap <leader>c <Plug>NormalModeSendToTmux
+nmap <leader>r <Plug>SetTmuxVars
 
 " Vimux
 map <Leader>rp :VimuxPromptCommand<CR>

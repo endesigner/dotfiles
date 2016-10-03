@@ -2,8 +2,9 @@
 [[ -s "/opt/local/bin" ]] && PATH=$PATH:/opt/local/bin
 eval "$(rbenv init -)"
 
-EDITOR=nvim
-VISUAL=nvim
+export EDITOR=nvim
+export VISUAL=nvim
+#export PAGER='nvim -R -u ~/.config/nvim/init.vim -'
 
 export LC_ALL=en_US.UTF-8  
 export LANG=en_US.UTF-8
@@ -18,6 +19,8 @@ setopt HIST_FIND_NO_DUPS # Don't show duplicates in search
 setopt HIST_IGNORE_SPACE # Don't preserve spaces. You may want to turn it off
 setopt NO_HIST_BEEP # Don't beep
 setopt SHARE_HISTORY # Share history between session/terminals
+
+bindkey '^R' history-incremental-search-backward
 
 # Vi style keys
 set -o vi
@@ -59,3 +62,9 @@ source ~/.zsh/zshalias
 
 export NVM_DIR="/Users/igor/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+PATH="/Users/igor/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/Users/igor/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/igor/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/igor/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/igor/perl5"; export PERL_MM_OPT;
