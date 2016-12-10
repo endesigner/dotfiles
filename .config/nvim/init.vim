@@ -27,8 +27,7 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'romainl/vim-qf'
 Plugin 'rking/ag.vim'
 Plugin 'tmhedberg/matchit'
-
-"Plugin 'sjbach/lusty'
+Plugin 'vifm/neovim-vifm'
 
 call vundle#end()
 filetype plugin indent on
